@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Clone - Alpine.js</title>
+    <title>Tchat</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" />
-    <link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="app.css">
 </head>
 
 <body x-data="chatApp()" class="chat-body">
@@ -79,8 +79,10 @@ Pilih teman untuk mulai chat
 <script type="module">
 import {
 auth,
-db
+db,
+analytics
 } from "./firebase-config.js";
+
 import {
 onAuthStateChanged,
 signOut

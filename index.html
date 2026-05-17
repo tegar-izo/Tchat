@@ -3,155 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Clone - Auth</title>
+    <title>Tchat - Auth</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" />
-    <link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="app.css">
 </head>
 <body class="auth-body">
 
-    <div id="box-login" class="auth-container">
-        <h2>Masuk Tchat</h2>
-        <input type="text" id="login-username" placeholder="Masukkan Username...">
-        <input type="password" id="login-password" placeholder="Masukkan Password...">
-        <button id="btn-login" class="btn-with-icon">
-            <span class="material-symbols-rounded">login</span>
-            LOG IN
-        </button>
-        <p>
-            Belum punya akun? <a id="link-ke-register" class="link-with-icon">
-                <span class="material-symbols-rounded">app_registration</span>
-                Daftar sekarang
-            </a>
-        </p>
-    </div>
+<div id="box-login" class="auth-container">
+<h2>Masuk Tchat</h2>
+<input type="text" id="login-username" placeholder="Masukkan Username...">
+<input type="password" id="login-password" placeholder="Masukkan Password...">
+<button id="btn-login" class="btn-with-icon">
+<span class="material-symbols-rounded">login</span>
+LOG IN
+</button>
+<p>
+Belum punya akun? <a id="link-ke-register" class="link-with-icon">
+<span class="material-symbols-rounded">app_registration</span>
+Daftar sekarang
+</a>
+</p>
+</div>
 
-    <div id="box-register" class="auth-container hidden">
-        <h2>Daftar Akun Baru</h2>
-        <input type="text" id="reg-name" placeholder="Nama Lengkap Anda...">
-        <input type="text" id="reg-username" placeholder="Buat Username Unik...">
-        <input type="password" id="reg-password" placeholder="Buat Password...">
-        <button id="btn-register" class="btn-with-icon">
-            <span class="material-symbols-rounded">person_add</span>
-            DAFTAR
-        </button>
-        <p>
-            Sudah punya akun? <a id="link-ke-login" class="link-with-icon">
-                <span class="material-symbols-rounded">login</span>
-                Login disini
-            </a>
-        </p>
-    </div>
+<div id="box-register" class="auth-container hidden">
+<h2>Daftar Akun Baru</h2>
+<input type="text" id="reg-name" placeholder="Nama Lengkap Anda...">
+<input type="text" id="reg-username" placeholder="Buat Username Unik...">
+<input type="password" id="reg-password" placeholder="Buat Password...">
+<button id="btn-register" class="btn-with-icon">
+<span class="material-symbols-rounded">person_add</span>
+DAFTAR
+</button>
+<p>
+Sudah punya akun? <a id="link-ke-login" class="link-with-icon">
+<span class="material-symbols-rounded">login</span>
+Login disini
+</a>
+</p>
+</div>
 
-    <script type="module">
-        // Import Firebase services dari config terpusat
-        import { auth, db } from "./firebase-config.js";
+<script type="module">
+// Import Firebase services dari config terpusat
+import {
+auth,
+db,
+analytics
+} from "./firebase-config.js";
 
-        // Import fungsi-fungsi Firebase yang dibutuhkan
-        import {
-            createUserWithEmailAndPassword,
-            signInWithEmailAndPassword
-        } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
-        import {
-            ref,
-            set,
-            get,
-            child
-        } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+// Import fungsi-fungsi Firebase yang dibutuhkan
+import {
+createUserWithEmailAndPassword,
+signInWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+import {
+ref,
+set,
+get,
+child
+} from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
-        // Domain bayangan untuk trik username -> email
-        const dummyDomain = "@tchat.com";
+// Domain bayangan untuk trik username -> email
+const dummyDomain = "@tchat.com";
 
-        // --- Navigasi Pindah Tampilan Form ---
-        document.getElementById("link-ke-register").addEventListener("click", () => {
-            document.getElementById("box-login").classList.add("hidden");
-            document.getElementById("box-register").classList.remove("hidden");
-        });
+// --- Navigasi Pindah Tampilan Form ---
+document.getElementById("link-ke-register").addEventListener("click", () => {
+document.getElementById("box-login").classList.add("hidden");
+document.getElementById("box-register").classList.remove("hidden");
+});
 
-        document.getElementById("link-ke-login").addEventListener("click", () => {
-            document.getElementById("box-register").classList.add("hidden");
-            document.getElementById("box-login").classList.remove("hidden");
-        });
-
-
-        // ================= PROSES REGISTER =================
-        document.getElementById("btn-register").addEventListener("click", async () => {
-            const namaLengkap = document.getElementById("reg-name").value.trim();
-            const usernameInput = document.getElementById("reg-username").value.trim().toLowerCase();
-            const passwordInput = document.getElementById("reg-password").value;
-
-            if (!namaLengkap || !usernameInput || !passwordInput) {
-                alert("Semua kolom wajib diisi!");
-                return;
-            }
-
-            // Gabungkan username dengan domain bayangan agar jadi format email untuk Firebase Auth
-            const emailBayangan = usernameInput + dummyDomain;
-
-            try {
-                // 1. Cek dulu ke Realtime Database apakah username sudah ada yang pakai
-                const dbRef = ref(db);
-                const snapshot = await get(child(dbRef, `usernames/${usernameInput}`));
-
-                if (snapshot.exists()) {
-                    alert("Username sudah digunakan orang lain! Pilih yang lain.");
-                    return;
-                }
-
-                // 2. Jika username aman (belum dipakai), daftarkan ke Firebase Authentication
-                const userCredential = await createUserWithEmailAndPassword(auth, emailBayangan, passwordInput);
-                const user = userCredential.user;
-
-                // 3. Simpan data profil lengkap ke Realtime Database menggunakan UID unik dari Firebase Auth
-                await set(ref(db, 'users/' + user.uid), {
-                    nama_lengkap: namaLengkap,
-                    username: usernameInput,
-                    uid: user.uid
-                });
-
-                // 4. Simpan juga username ke daftar indeks biar tidak bisa diduplikasi orang lain
-                await set(ref(db, 'usernames/' + usernameInput), {
-                    uid: user.uid
-                });
-
-                alert("Akun berhasil dibuat! Silakan login.");
-                document.getElementById("link-ke-login").click(); // Otomatis pindah ke halaman login
-
-            } catch (error) {
-                console.error(error);
-                alert("Gagal mendaftar: " + error.message);
-            }
-        });
+document.getElementById("link-ke-login").addEventListener("click", () => {
+document.getElementById("box-register").classList.add("hidden");
+document.getElementById("box-login").classList.remove("hidden");
+});
 
 
-        // ================= PROSES LOGIN =================
-        document.getElementById("btn-login").addEventListener("click", async () => {
-            const usernameInput = document.getElementById("login-username").value.trim().toLowerCase();
-            const passwordInput = document.getElementById("login-password").value;
+// ================= PROSES REGISTER =================
+document.getElementById("btn-register").addEventListener("click", async () => {
+const namaLengkap = document.getElementById("reg-name").value.trim();
+const usernameInput = document.getElementById("reg-username").value.trim().toLowerCase();
+const passwordInput = document.getElementById("reg-password").value;
 
-            if (!usernameInput || !passwordInput) {
-                alert("Username dan password harus diisi!");
-                return;
-            }
+if (!namaLengkap || !usernameInput || !passwordInput) {
+alert("Semua kolom wajib diisi!");
+return;
+}
 
-            // Ubah input username menjadi format email bayangan seperti saat register
-            const emailBayangan = usernameInput + dummyDomain;
+// Gabungkan username dengan domain bayangan agar jadi format email untuk Firebase Auth
+const emailBayangan = usernameInput + dummyDomain;
 
-            try {
-                // Lakukan proses login ke Firebase Auth
-                const userCredential = await signInWithEmailAndPassword(auth, emailBayangan, passwordInput);
-                const user = userCredential.user;
+try {
+// 1. Cek dulu ke Realtime Database apakah username sudah ada yang pakai
+const dbRef = ref(db);
+const snapshot = await get(child(dbRef, `usernames/${usernameInput}`));
 
-                alert("Login Berhasil! Selamat datang di Telegram Clone.");
+if (snapshot.exists()) {
+alert("Username sudah digunakan orang lain! Pilih yang lain.");
+return;
+}
 
-                window.location.href = "chat.html";
-                // TODO: Di tahap berikutnya, di sini kita akan mengarahkan user ke halaman chat utama
-                console.log("User UID yang sedang aktif:", user.uid);
+// 2. Jika username aman (belum dipakai), daftarkan ke Firebase Authentication
+const userCredential = await createUserWithEmailAndPassword(auth, emailBayangan, passwordInput);
+const user = userCredential.user;
 
-            } catch (error) {
-                console.error(error);
-                alert("Login gagal! Periksa kembali username atau password Anda.");
-            }
-        });
-    </script>
+// 3. Simpan data profil lengkap ke Realtime Database menggunakan UID unik dari Firebase Auth
+await set(ref(db, 'users/' + user.uid), {
+nama_lengkap: namaLengkap,
+username: usernameInput,
+uid: user.uid
+});
+
+// 4. Simpan juga username ke daftar indeks biar tidak bisa diduplikasi orang lain
+await set(ref(db, 'usernames/' + usernameInput), {
+uid: user.uid
+});
+
+alert("Akun berhasil dibuat! Silakan login.");
+document.getElementById("link-ke-login").click(); // Otomatis pindah ke halaman login
+
+} catch (error) {
+console.error(error);
+alert("Gagal mendaftar: " + error.message);
+}
+});
+
+
+// ================= PROSES LOGIN =================
+document.getElementById("btn-login").addEventListener("click", async () => {
+const usernameInput = document.getElementById("login-username").value.trim().toLowerCase();
+const passwordInput = document.getElementById("login-password").value;
+
+if (!usernameInput || !passwordInput) {
+alert("Username dan password harus diisi!");
+return;
+}
+
+// Ubah input username menjadi format email bayangan seperti saat register
+const emailBayangan = usernameInput + dummyDomain;
+
+try {
+// Lakukan proses login ke Firebase Auth
+const userCredential = await signInWithEmailAndPassword(auth, emailBayangan, passwordInput);
+const user = userCredential.user;
+
+alert("Login Berhasil! Selamat datang di Tchat.");
+
+window.location.href = "chat.html";
+// TODO: Di tahap berikutnya, di sini kita akan mengarahkan user ke halaman chat utama
+console.log("User UID yang sedang aktif:", user.uid);
+
+} catch (error) {
+console.error(error);
+alert("Login gagal! Periksa kembali username atau password Anda.");
+}
+});
+</script>
 </body>
 </html>
