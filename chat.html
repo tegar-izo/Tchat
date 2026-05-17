@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Clone - Alpine.js</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="app.css">
+</head>
+<body x-data="chatApp()" class="chat-body">
+
+    <div class="sidebar" :class="{ 'show-mobile': mobview === 'sidebar' }">
+        <div class="user-profile">
+            <div class="user-info">
+                <div class="avatar" :style="'background-color: ' + getAvatarColor(myFullName)" x-text="getInitials(myFullName)"></div>
+                <span x-text="'@' + myUsername">Memuat...</span>
+            </div>
+            <button class="logout-btn btn-with-icon" @click="logout()">
+                <span class="material-symbols-rounded">logout</span>
+                Keluar
+            </button>
+        </div>
+        <div class="search-box">
+            <div class="search-inner">
+                <input type="text" x-model="searchUsername" placeholder="Username teman...">
+            </div>
+            <button class="btn-add btn-with-icon" @click="addFriend()" title="Tambah Teman">
+                <span class="material-symbols-rounded">person_add</span>
+            </button>
+        </div>
+        <div class="sidebar-title">Daftar Teman</div>
+        <div class="friend-list">
+            <template x-for="friend in friends" :key="friend.uid">
+                <div class="friend-item" 
+                     :class="{ 'active': activeFriendUid === friend.uid }"
+                     @click="selectFriend(friend)">
+                    <div class="avatar" :style="'background-color: ' + getAvatarColor(friend.nama_lengkap)" x-text="getInitials(friend.nama_lengkap)"></div>
+                    <div class="friend-info">
+                        <span class="friend-name" x-text="friend.nama_lengkap"></span>
+                        <span class="friend-username" x-text="'@' + friend.username"></span>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+
+    <div class="chat-area" :class="{ 'show-mobile': mobview === 'chat' }">
+        <div class="chat-header">
+            <button class="back-btn btn-with-icon" @click="mobview = 'sidebar'">
+                <span class="material-symbols-rounded">arrow_back_ios_new</span>
+            </button>
+            <div class="chat-header-info" x-show="activeFriendUid">
+                <div class="avatar" :style="'background-color: ' + getAvatarColor(activeFriendName)" x-text="getInitials(activeFriendName)"></div>
+                <div id="active-chat-title" x-text="activeFriendName"></div>
+            </div>
+            <div x-show="!activeFriendUid">Pilih teman untuk mulai chat</div>
+        </div>
+        <div class="chat-messages" x-ref="messageBox">
+            <template x-for="msg in messages">
+                <div class="message" :class="msg.pengirimUid === myUid ? 'sent': 'received'">
+                    <span x-text="msg.teks"></span>
+                    <span class="msg-time" x-text="formatTime(msg.waktu)"></span>
+                </div>
+            </template>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" x-model="chatInput" @keydown.enter="sendMessage()" placeholder="Ketik pesan..." :disabled="!activeFriendUid">
+            <button class="btn-send-icon" @click="sendMessage()" :disabled="!activeFriendUid" title="Kirim">
+                <span class="material-symbols-rounded">send</span>
+            </button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { auth, db } from "./firebase-config.js";
+        import {
+            onAuthStateChanged,
+            signOut
+        } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+        import {
+            ref,
+            set,
+            get,
+            child,
+            push,
+            onChildAdded,
+            off
+        } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
+        let activeChatRef = null;
+        let currentUserObj = null;
+
+        window.chatApp = function() {
+            return {
+                mobview: 'sidebar',
+                myUid: '',
+                myUsername: '',
+                myFullName: '',
+                searchUsername: '',
+                friends: [],
+                messages: [],
+                activeFriendUid: null,
+                activeFriendName: '',
+                chatInput: '',
+
+                init() {
+                    onAuthStateChanged(auth, async (user) => {
+                        if (user) {
+                            currentUserObj = user;
+                            this.myUid = user.uid;
+                            const snapshot = await get(ref(db, 'users/' + user.uid));
+                            if (snapshot.exists()) {
+                                const data = snapshot.val();
+                                this.myUsername = data.username;
+                                this.myFullName = data.nama_lengkap;
+                            }
+                            this.loadFriendList();
+                        } else {
+                            window.location.href = "index.html";
+                        }
+                    });
+                },
+
+                getInitials(name) {
+                    if (!name) return "?";
+                    return name.split(' ').map(n => n[0]).join('').slice(0, 2);
+                },
+
+                formatTime(isoString) {
+                    if (!isoString) return '';
+                    const date = new Date(isoString);
+                    return date.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+                },
+
+                getAvatarColor(name) {
+                    if (!name) return 'var(--pc)';
+                    // Palet warna yang lebih lembut (soft/pastel)
+                    const colors = [
+                        '#a2b9bc', '#b2ad7f', '#878f99', '#6b5b95', 
+                        '#feb236', '#d64161', '#ff7b25', '#92a8d1', 
+                        '#f7cac9', '#dec2cb', '#b5e7a0', '#86af49'
+                    ];
+                    let hash = 0;
+                    for (let i = 0; i < name.length; i++) {
+                        hash = name.charCodeAt(i) + ((hash << 5) - hash);
+                    }
+                    const index = Math.abs(hash) % colors.length;
+                    return colors[index];
+                },
+
+                logout() {
+                    signOut(auth);
+                },
+
+                async addFriend() {
+                    const target = this.searchUsername.trim().toLowerCase();
+                    if (!target || !currentUserObj) return;
+
+                    try {
+                        const snapshot = await get(ref(db, 'usernames/' + target));
+                        if (!snapshot.exists()) {
+                            alert("Username tidak ditemukan!");
+                            return;
+                        }
+
+                        const targetUid = snapshot.val().uid;
+                        if (targetUid === this.myUid) {
+                            alert("Tidak bisa menambahkan diri sendiri!");
+                            return;
+                        }
+
+                        await set(ref(db, `users/${this.myUid}/daftar_teman/${targetUid}`), true);
+                        await set(ref(db, `users/${targetUid}/daftar_teman/${this.myUid}`), true);
+
+                        alert("Teman berhasil ditambahkan!");
+                        this.searchUsername = "";
+                        this.loadFriendList();
+                    } catch (error) {
+                        alert("Error: " + error.message);
+                    }
+                },
+
+                async loadFriendList() {
+                    if (!this.myUid) return;
+                    const snapshot = await get(ref(db, `users/${this.myUid}/daftar_teman`));
+                    if (!snapshot.exists()) return;
+
+                    const friendsUids = Object.keys(snapshot.val());
+                    const tempFriends = [];
+
+                    for (let fUid of friendsUids) {
+                        const userSnapshot = await get(ref(db, 'users/' + fUid));
+                        if (userSnapshot.exists()) {
+                            tempFriends.push(userSnapshot.val());
+                        }
+                    }
+                    this.friends = tempFriends;
+                },
+
+                selectFriend(friend) {
+                    this.activeFriendUid = friend.uid;
+                    this.activeFriendName = friend.nama_lengkap;
+                    this.mobview = 'chat';
+                    this.bukaRoomChat(friend.uid);
+                },
+
+                bukaRoomChat(friendUid) {
+                    this.messages = [];
+                    if (activeChatRef) off(activeChatRef);
+
+                    const chatRoomId = this.myUid < friendUid 
+                        ? `${this.myUid}_${friendUid}` 
+                        : `${friendUid}_${this.myUid}`;
+                    
+                    activeChatRef = ref(db, `pesan_pribadi/${chatRoomId}`);
+
+                    onChildAdded(activeChatRef, (snapshot) => {
+                        this.messages.push(snapshot.val());
+                        this.$nextTick(() => {
+                            const box = this.$refs.messageBox;
+                            if (box) box.scrollTop = box.scrollHeight;
+                        });
+                    });
+                },
+
+                sendMessage() {
+                    const teks = this.chatInput.trim();
+                    if (!teks || !activeChatRef) return;
+
+                    push(activeChatRef, {
+                        pengirimUid: this.myUid,
+                        teks: teks,
+                        waktu: new Date().toISOString()
+                    });
+                    this.chatInput = "";
+                }
+            }
+        };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</body>
+</html>
