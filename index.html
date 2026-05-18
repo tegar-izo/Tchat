@@ -3,159 +3,234 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tchat - Auth</title>
+    <title>Tchat SPA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" />
-<link rel="stylesheet" href="app.css">
+    <link rel="stylesheet" href="app.css">
 </head>
-<body class="auth-body">
+<body x-data="tchatApp()" x-cloak :class="[darkTheme ? 'dark' : '', accentColor === 'glass' ? 'theme-glass' : '']">
 
-<div id="box-login" class="auth-container">
-<h2>Masuk Tchat</h2>
-<input type="text" id="login-username" placeholder="Masukkan Username...">
-<input type="password" id="login-password" placeholder="Masukkan Password...">
-<button id="btn-login" class="btn-with-icon">
-<span class="material-symbols-rounded">login</span>
-LOG IN
-</button>
-<p>
-Belum punya akun? <a id="link-ke-register" class="link-with-icon">
-<span class="material-symbols-rounded">app_registration</span>
-Daftar sekarang
-</a>
-</p>
-</div>
+    <!-- 1. LOADING SCREEN -->
+    <template x-if="currentPage === 'loading'">
+        <div class="auth-body">
+            <div class="auth-container" style="align-items: center;">
+                <div class="spinner" style="width: 40px; height: 40px; border-top-color: var(--pc);"></div>
+                <p style="margin-top: 15px; color: var(--pc); font-weight: 700;">Menyiapkan Tchat...</p>
+            </div>
+        </div>
+    </template>
 
-<div id="box-register" class="auth-container hidden">
-<h2>Daftar Akun Baru</h2>
-<input type="text" id="reg-name" placeholder="Nama Lengkap Anda...">
-<input type="text" id="reg-username" placeholder="Buat Username Unik...">
-<input type="password" id="reg-password" placeholder="Buat Password...">
-<button id="btn-register" class="btn-with-icon">
-<span class="material-symbols-rounded">person_add</span>
-DAFTAR
-</button>
-<p>
-Sudah punya akun? <a id="link-ke-login" class="link-with-icon">
-<span class="material-symbols-rounded">login</span>
-Login disini
-</a>
-</p>
-</div>
+    <!-- 2. AUTH PAGE -->
+    <template x-if="currentPage === 'auth'">
+        <div class="auth-body">
+            <!-- Login Box -->
+            <div x-show="authMode === 'login'" class="auth-container">
+                <h2>Masuk Tchat</h2>
+                <input type="text" x-model="loginUsername" placeholder="Username...">
+                <div style="position: relative; width: 100%;">
+                    <input :type="showPassword ? 'text' : 'password'" x-model="loginPassword" placeholder="Password...">
+                    <span class="material-symbols-rounded" 
+                          style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); cursor: pointer; opacity: 0.5;"
+                          @click="showPassword = !showPassword" 
+                          x-text="showPassword ? 'visibility_off' : 'visibility'">
+                    </span>
+                </div>
+                <button @click="handleLogin()" :disabled="authLoading">
+                    <template x-if="!authLoading">
+                        <span><span class="material-symbols-rounded" style="vertical-align: middle; margin-right: 8px;">login</span>LOG IN</span>
+                    </template>
+                    <template x-if="authLoading">
+                        <div class="spinner"></div>
+                    </template>
+                </button>
+                <p style="font-size: 0.9rem; color: var(--tm);">Belum punya akun? <a @click="authMode = 'register'; showPassword = false" class="link-with-icon">Daftar sekarang</a></p>
+            </div>
 
-<script type="module">
-// Import Firebase services dari config terpusat
-import {
-auth,
-db,
-analytics
-} from "./firebase-config.js";
+            <!-- Register Box -->
+            <div x-show="authMode === 'register'" class="auth-container">
+                <h2>Daftar Baru</h2>
+                <input type="text" x-model="regFullName" placeholder="Nama Lengkap...">
+                <input type="text" x-model="regUsername" placeholder="Username unik...">
+                <div style="position: relative; width: 100%;">
+                    <input :type="showPassword ? 'text' : 'password'" x-model="regPassword" placeholder="Password...">
+                    <span class="material-symbols-rounded" 
+                          style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); cursor: pointer; opacity: 0.5;"
+                          @click="showPassword = !showPassword" 
+                          x-text="showPassword ? 'visibility_off' : 'visibility'">
+                    </span>
+                </div>
+                <button @click="handleRegister()" :disabled="authLoading">
+                    <template x-if="!authLoading">
+                        <span><span class="material-symbols-rounded" style="vertical-align: middle; margin-right: 8px;">person_add</span>DAFTAR</span>
+                    </template>
+                    <template x-if="authLoading">
+                        <div class="spinner"></div>
+                    </template>
+                </button>
+                <p style="font-size: 0.9rem; color: var(--tm);">Sudah punya akun? <a @click="authMode = 'login'; showPassword = false" class="link-with-icon">Login disini</a></p>
+            </div>
+        </div>
+    </template>
 
-// Import fungsi-fungsi Firebase yang dibutuhkan
-import {
-createUserWithEmailAndPassword,
-signInWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
-import {
-ref,
-set,
-get,
-child
-} from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+    <!-- 3. CHAT PAGE -->
+    <template x-if="currentPage === 'chat'">
+        <div class="chat-body">
+            <!-- Sidebar -->
+            <div class="sidebar" :class="{ 'show-mobile': mobview === 'sidebar' }">
+                <div class="user-profile">
+                    <div class="avatar" x-text="getInitials(myFullName)"></div>
+                    <div style="flex: 1; overflow: hidden;">
+                        <span style="font-weight: 800; display: block;" x-text="myFullName"></span>
+                        <span style="font-size: 0.8rem; opacity: 0.8;" x-text="'@' + myUsername"></span>
+                    </div>
+                </div>
 
-// Domain bayangan untuk trik username -> email
-const dummyDomain = "@tchat.com";
+                <div class="search-box">
+                    <div class="search-inner">
+                        <input type="text" x-model="searchUsername" @keydown.enter="addFriend()" placeholder="Username teman...">
+                    </div>
+                    <button class="btn-add" @click="addFriend()">
+                        <span class="material-symbols-rounded">person_add</span>
+                    </button>
+                </div>
 
-// --- Navigasi Pindah Tampilan Form ---
-document.getElementById("link-ke-register").addEventListener("click", () => {
-document.getElementById("box-login").classList.add("hidden");
-document.getElementById("box-register").classList.remove("hidden");
-});
+                <div class="sidebar-title">Daftar Teman</div>
+                <div class="friend-list">
+                    <div x-show="loadingFriends" style="text-align: center; padding: 20px;">
+                        <div class="spinner" style="border-top-color: var(--pc); margin: 0 auto;"></div>
+                    </div>
+                    <div x-show="!loadingFriends && friends.length === 0" class="empty-state">
+                        <span class="material-symbols-rounded">person_search</span>
+                        <p>Belum ada teman.</p>
+                    </div>
+                    <template x-for="friend in friends" :key="friend.uid">
+                        <div class="friend-item" :class="{ 'active': activeFriendUid === friend.uid }" @click="selectFriend(friend)">
+                            <div class="avatar" :style="'background-color: ' + getAvatarColor(friend.nama_lengkap)" x-text="getInitials(friend.nama_lengkap)"></div>
+                            <div class="friend-info">
+                                <span class="friend-name" x-text="friend.nama_lengkap"></span>
+                                <span class="friend-username" x-text="'@' + friend.username"></span>
+                            </div>
+                        </div>
+                    </template>
+                </div>
 
-document.getElementById("link-ke-login").addEventListener("click", () => {
-document.getElementById("box-register").classList.add("hidden");
-document.getElementById("box-login").classList.remove("hidden");
-});
+                <!-- MENU FOOTER -->
+                <div class="sidebar-footer">
+                    <div style="position: relative;">
+                        <button class="menu-trigger-btn" @click.stop="menuOpen = !menuOpen" @click.away="menuOpen = false">
+                            <span class="material-symbols-rounded">menu</span> Menu
+                        </button>
+                        
+                        <!-- Floating Menu -->
+                        <div x-show="menuOpen" x-transition class="floating-menu">
+                            <div class="menu-item" @click="toggleTheme()">
+                                <span class="material-symbols-rounded" x-text="darkTheme ? 'light_mode' : 'dark_mode'"></span>
+                                <span x-text="darkTheme ? 'Tema Terang' : 'Tema Gelap'"></span>
+                            </div>
+                            <div class="menu-divider"></div>
+                            <div class="menu-section-title">Warna Aksen</div>
+                            <div class="custom-dropdown">
+                                <button class="dropdown-trigger" @click.stop="accentMenuOpen = !accentMenuOpen">
+                                    <div class="color-dot" :style="'background-color: var(--pc)'"></div>
+                                    <span style="margin-left: 10px; flex: 1; text-align: left;" x-text="{
+                                        'blue': 'Biru Tenang',
+                                        'green': 'Hijau Alam',
+                                        'red': 'Merah Berani'
+                                    }[accentColor] || 'Pilih Warna'"></span>
+                                    <span class="material-symbols-rounded" :style="accentMenuOpen ? 'transform: rotate(180deg)' : ''">expand_more</span>
+                                </button>
+                                
+                                <div x-show="accentMenuOpen" @click.away="accentMenuOpen = false" class="dropdown-list">
+                                    <template x-for="opt in [
+                                        {id: 'blue', label: 'Biru', color: '#0061A4'},
+                                        {id: 'green', label: 'Hijau', color: '#006D3B'},
+                                        {id: 'red', label: 'Merah', color: '#BA1A1A'}
+                                    ]">
+                                        <div class="dropdown-item" :class="{ 'active': accentColor === opt.id }" @click="changeAccent(opt.id); accentMenuOpen = false">
+                                            <div class="color-dot" :style="'background-color: ' + opt.color"></div>
+                                            <span x-text="opt.label"></span>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                            <div class="menu-divider"></div>
+                            <div class="menu-item logout" @click="logout()">
+                                <span class="material-symbols-rounded">logout</span> Keluar
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+            <!-- Chat Area -->
+            <div class="chat-area" :class="{ 'show-mobile': mobview === 'chat' }">
+                <div class="chat-header">
+                    <button class="back-btn" @click="handleBack()">
+                        <span class="material-symbols-rounded">arrow_back_ios_new</span>
+                    </button>
+                    <template x-if="activeFriendUid">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div class="avatar" :style="'background-color: ' + getAvatarColor(activeFriendName)" x-text="getInitials(activeFriendName)"></div>
+                            <span style="font-weight: 800; font-size: 1.1rem; color: var(--pc);" x-text="activeFriendName"></span>
+                        </div>
+                    </template>
+                    <div x-show="!activeFriendUid" style="color: var(--tm); font-weight: 700;">Pilih teman untuk chat</div>
+                </div>
 
-// ================= PROSES REGISTER =================
-document.getElementById("btn-register").addEventListener("click", async () => {
-const namaLengkap = document.getElementById("reg-name").value.trim();
-const usernameInput = document.getElementById("reg-username").value.trim().toLowerCase();
-const passwordInput = document.getElementById("reg-password").value;
+                <div class="chat-messages" x-ref="messageBox">
+                    <div x-show="!activeFriendUid" class="empty-state">
+                        <span class="material-symbols-rounded">forum</span>
+                        <h3>Tchat Messenger</h3>
+                        <p>Mulai obrolan seru sekarang!</p>
+                    </div>
+                    <div x-show="activeFriendUid && loadingMessages" style="text-align: center; padding: 20px;">
+                        <div class="spinner" style="border-top-color: var(--pc); margin: 0 auto;"></div>
+                    </div>
+                    <template x-for="msg in messages">
+                        <div class="message" :class="msg.pengirimUid === myUid ? 'sent' : 'received'">
+                            <span x-text="msg.teks"></span>
+                            <span class="msg-time" x-text="formatTime(msg.waktu)"></span>
+                        </div>
+                    </template>
+                </div>
 
-if (!namaLengkap || !usernameInput || !passwordInput) {
-alert("Semua kolom wajib diisi!");
-return;
-}
+                <div class="chat-input-area">
+                    <input type="text" x-model="chatInput" @keydown.enter="sendMessage()" placeholder="Ketik pesan..." :disabled="!activeFriendUid">
+                    <button class="btn-send-icon" @click="sendMessage()" :disabled="!activeFriendUid">
+                        <span class="material-symbols-rounded">send</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </template>
 
-// Gabungkan username dengan domain bayangan agar jadi format email untuk Firebase Auth
-const emailBayangan = usernameInput + dummyDomain;
+    <script type="module" src="app.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-try {
-// 1. Cek dulu ke Realtime Database apakah username sudah ada yang pakai
-const dbRef = ref(db);
-const snapshot = await get(child(dbRef, `usernames/${usernameInput}`));
-
-if (snapshot.exists()) {
-alert("Username sudah digunakan orang lain! Pilih yang lain.");
-return;
-}
-
-// 2. Jika username aman (belum dipakai), daftarkan ke Firebase Authentication
-const userCredential = await createUserWithEmailAndPassword(auth, emailBayangan, passwordInput);
-const user = userCredential.user;
-
-// 3. Simpan data profil lengkap ke Realtime Database menggunakan UID unik dari Firebase Auth
-await set(ref(db, 'users/' + user.uid), {
-nama_lengkap: namaLengkap,
-username: usernameInput,
-uid: user.uid
-});
-
-// 4. Simpan juga username ke daftar indeks biar tidak bisa diduplikasi orang lain
-await set(ref(db, 'usernames/' + usernameInput), {
-uid: user.uid
-});
-
-alert("Akun berhasil dibuat! Silakan login.");
-document.getElementById("link-ke-login").click(); // Otomatis pindah ke halaman login
-
-} catch (error) {
-console.error(error);
-alert("Gagal mendaftar: " + error.message);
-}
-});
-
-
-// ================= PROSES LOGIN =================
-document.getElementById("btn-login").addEventListener("click", async () => {
-const usernameInput = document.getElementById("login-username").value.trim().toLowerCase();
-const passwordInput = document.getElementById("login-password").value;
-
-if (!usernameInput || !passwordInput) {
-alert("Username dan password harus diisi!");
-return;
-}
-
-// Ubah input username menjadi format email bayangan seperti saat register
-const emailBayangan = usernameInput + dummyDomain;
-
-try {
-// Lakukan proses login ke Firebase Auth
-const userCredential = await signInWithEmailAndPassword(auth, emailBayangan, passwordInput);
-const user = userCredential.user;
-
-alert("Login Berhasil! Selamat datang di Tchat.");
-
-window.location.href = "chat.html";
-// TODO: Di tahap berikutnya, di sini kita akan mengarahkan user ke halaman chat utama
-console.log("User UID yang sedang aktif:", user.uid);
-
-} catch (error) {
-console.error(error);
-alert("Login gagal! Periksa kembali username atau password Anda.");
-}
-});
-</script>
+    <!-- CUSTOM MODAL -->
+    <div x-show="modal.show" x-transition.opacity class="modal-overlay" style="display: none;">
+        <div class="modal-box" @click.away="closeModal()">
+            <h3 x-text="modal.title"></h3>
+            <p x-text="modal.message"></p>
+            <div class="modal-actions">
+                <button class="btn-secondary" @click="closeModal()">Batal</button>
+                <button class="btn-primary" @click="handleModalConfirm()" x-text="modal.type === 'confirm' ? 'Ya, Lanjutkan' : 'Oke'"></button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+al.type === 'confirm' ? 'Ya, Lanjutkan' : 'Oke'"></button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+ === 'confirm' ? 'Ya, Lanjutkan' : 'Oke'"></button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
