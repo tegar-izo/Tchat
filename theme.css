@@ -19,6 +19,11 @@
 
     --shd: 0 4px 12px rgba(0,0,0,0.08);
     --f: 'Quicksand', sans-serif;
+
+    /* Blur Effects */
+    --blur-s: 8px;
+    --blur-m: 20px;
+    --blur-l: 30px;
 }
 
 :root.dark {

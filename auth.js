@@ -106,6 +106,7 @@ export const authLogic = {
 
     logout() {
         this.showModal('Konfirmasi Keluar', 'Apakah Anda yakin ingin keluar?', 'confirm', () => {
+            this.stopChatListener(); // Matikan listener sebelum logout
             signOut(auth);
             this.currentPage = 'auth';
             this.friends = [];

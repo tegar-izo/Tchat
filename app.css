@@ -59,7 +59,7 @@ button:disabled {
     z-index: 1000;
 }
 .modal-box {
-    backdrop-filter: blur(30px);
+    backdrop-filter: blur(var(--blur-l));
     background: color-mix(in srgb,var(--w) 70%, transparent);
     padding: 40px 32px;
     border-radius: 40px;
