@@ -8,229 +8,275 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" />
-    <link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="auth.css">
+<link rel="stylesheet" href="chat.css">
 </head>
 <body x-data="tchatApp()" x-cloak :class="[darkTheme ? 'dark' : '', accentColor === 'glass' ? 'theme-glass' : '']">
 
-    <!-- 1. LOADING SCREEN -->
-    <template x-if="currentPage === 'loading'">
-        <div class="auth-body">
-            <div class="auth-container" style="align-items: center;">
-                <div class="spinner" style="width: 40px; height: 40px; border-top-color: var(--pc);"></div>
-                <p style="margin-top: 15px; color: var(--pc); font-weight: 700;">Menyiapkan Tchat...</p>
-            </div>
-        </div>
-    </template>
+<!-- 1. LOADING SCREEN -->
+<template x-if="currentPage === 'loading'">
+<div class="auth-body">
+<div class="auth-container" style="align-items: center;">
+<div class="spinner" style="width: 40px; height: 40px; border-top-color: var(--pc);"></div>
+<p style="margin-top: 15px; color: var(--pc); font-weight: 700;">
+Menyiapkan Tchat...
+</p>
+</div>
+</div>
+</template>
 
-    <!-- 2. AUTH PAGE -->
-    <template x-if="currentPage === 'auth'">
-        <div class="auth-body">
-            <!-- Login Box -->
-            <div x-show="authMode === 'login'" class="auth-container">
-                <h2>Masuk Tchat</h2>
-                <input type="text" x-model="loginUsername" placeholder="Username...">
-                <div style="position: relative; width: 100%;">
-                    <input :type="showPassword ? 'text' : 'password'" x-model="loginPassword" placeholder="Password...">
-                    <span class="material-symbols-rounded" 
-                          style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); cursor: pointer; opacity: 0.5;"
-                          @click="showPassword = !showPassword" 
-                          x-text="showPassword ? 'visibility_off' : 'visibility'">
-                    </span>
-                </div>
-                <button @click="handleLogin()" :disabled="authLoading">
-                    <template x-if="!authLoading">
-                        <span><span class="material-symbols-rounded" style="vertical-align: middle; margin-right: 8px;">login</span>LOG IN</span>
-                    </template>
-                    <template x-if="authLoading">
-                        <div class="spinner"></div>
-                    </template>
-                </button>
-                <p style="font-size: 0.9rem; color: var(--tm);">Belum punya akun? <a @click="authMode = 'register'; showPassword = false" class="link-with-icon">Daftar sekarang</a></p>
-            </div>
+<!-- 2. AUTH PAGE -->
+<template x-if="currentPage === 'auth'">
+<div class="auth-body">
+<!-- Login Box -->
+<div x-show="authMode === 'login'" class="auth-container">
+<h2>Masuk Tchat</h2>
+<input type="text" x-model="loginUsername" placeholder="Username...">
+<div style="position: relative; width: 100%;">
+<input :type="showPassword ? 'text' : 'password'" x-model="loginPassword" placeholder="Password...">
+<span class="material-symbols-rounded"
+style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); cursor: pointer; opacity: 0.5;"
+@click="showPassword = !showPassword"
+x-text="showPassword ? 'visibility_off' : 'visibility'">
+</span>
+</div>
+<button @click="handleLogin()" :disabled="authLoading">
+<template x-if="!authLoading">
+<span><span class="material-symbols-rounded" style="vertical-align: middle; margin-right: 8px;">login</span>LOG IN</span>
+</template>
+<template x-if="authLoading">
+<div class="spinner"></div>
+</template>
+</button>
+<p style="font-size: 0.9rem; color: var(--tm);">
+Belum punya akun? <a @click="authMode = 'register'; showPassword = false" class="link-with-icon">Daftar sekarang</a>
+</p>
+</div>
 
-            <!-- Register Box -->
-            <div x-show="authMode === 'register'" class="auth-container">
-                <h2>Daftar Baru</h2>
-                <input type="text" x-model="regFullName" placeholder="Nama Lengkap...">
-                <input type="text" x-model="regUsername" placeholder="Username unik...">
-                <div style="position: relative; width: 100%;">
-                    <input :type="showPassword ? 'text' : 'password'" x-model="regPassword" placeholder="Password...">
-                    <span class="material-symbols-rounded" 
-                          style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); cursor: pointer; opacity: 0.5;"
-                          @click="showPassword = !showPassword" 
-                          x-text="showPassword ? 'visibility_off' : 'visibility'">
-                    </span>
-                </div>
-                <button @click="handleRegister()" :disabled="authLoading">
-                    <template x-if="!authLoading">
-                        <span><span class="material-symbols-rounded" style="vertical-align: middle; margin-right: 8px;">person_add</span>DAFTAR</span>
-                    </template>
-                    <template x-if="authLoading">
-                        <div class="spinner"></div>
-                    </template>
-                </button>
-                <p style="font-size: 0.9rem; color: var(--tm);">Sudah punya akun? <a @click="authMode = 'login'; showPassword = false" class="link-with-icon">Login disini</a></p>
-            </div>
-        </div>
-    </template>
+<!-- Register Box -->
+<div x-show="authMode === 'register'" class="auth-container">
+<h2>Daftar Baru</h2>
+<input type="text" x-model="regFullName" placeholder="Nama Lengkap...">
+<input type="text" x-model="regUsername" placeholder="Username unik...">
+<div style="position: relative; width: 100%;">
+<input :type="showPassword ? 'text' : 'password'" x-model="regPassword" placeholder="Password...">
+<span class="material-symbols-rounded"
+style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%); cursor: pointer; opacity: 0.5;"
+@click="showPassword = !showPassword"
+x-text="showPassword ? 'visibility_off' : 'visibility'">
+</span>
+</div>
+<button @click="handleRegister()" :disabled="authLoading">
+<template x-if="!authLoading">
+<span><span class="material-symbols-rounded" style="vertical-align: middle; margin-right: 8px;">person_add</span>DAFTAR</span>
+</template>
+<template x-if="authLoading">
+<div class="spinner"></div>
+</template>
+</button>
+<p style="font-size: 0.9rem; color: var(--tm);">
+Sudah punya akun? <a @click="authMode = 'login'; showPassword = false" class="link-with-icon">Login disini</a>
+</p>
+</div>
+</div>
+</template>
 
-    <!-- 3. CHAT PAGE -->
-    <template x-if="currentPage === 'chat'">
-        <div class="chat-body">
-            <!-- Sidebar -->
-            <div class="sidebar" :class="{ 'show-mobile': mobview === 'sidebar' }">
-                <div class="user-profile">
-                    <div class="avatar" x-text="getInitials(myFullName)"></div>
-                    <div style="flex: 1; overflow: hidden;">
-                        <span style="font-weight: 800; display: block;" x-text="myFullName"></span>
-                        <span style="font-size: 0.8rem; opacity: 0.8;" x-text="'@' + myUsername"></span>
-                    </div>
-                </div>
+<!-- 3. CHAT PAGE -->
+<template x-if="currentPage === 'chat'">
+<div class="chat-body">
+<!-- Sidebar -->
+<div class="sidebar" :class="{ 'show-mobile': mobview === 'sidebar' }">
+<div class="user-profile">
+<div class="avatar" x-text="getInitials(myFullName)"></div>
+<div style="flex: 1; overflow: hidden;">
+<span style="font-weight: 800; display: block;" x-text="myFullName"></span>
+<span style="font-size: 0.8rem; opacity: 0.8;" x-text="'@' + myUsername"></span>
+</div>
+</div>
 
-                <div class="search-box">
-                    <div class="search-inner">
-                        <input type="text" x-model="searchUsername" @keydown.enter="addFriend()" placeholder="Username teman...">
-                    </div>
-                    <button class="btn-add" @click="addFriend()">
-                        <span class="material-symbols-rounded">person_add</span>
-                    </button>
-                </div>
+<div class="search-box">
+<div class="search-inner">
+<input type="text" x-model="searchUsername" @keydown.enter="addFriend()" placeholder="Username teman...">
+</div>
+<button class="btn-add" @click="addFriend()">
+<span class="material-symbols-rounded">person_add</span>
+</button>
+</div>
 
-                <div class="sidebar-title">Daftar Teman</div>
-                <div class="friend-list">
-                    <div x-show="loadingFriends" style="text-align: center; padding: 20px;">
-                        <div class="spinner" style="border-top-color: var(--pc); margin: 0 auto;"></div>
-                    </div>
-                    <div x-show="!loadingFriends && friends.length === 0" class="empty-state">
-                        <span class="material-symbols-rounded">person_search</span>
-                        <p>Belum ada teman.</p>
-                    </div>
-                    <template x-for="friend in friends" :key="friend.uid">
-                        <div class="friend-item" :class="{ 'active': activeFriendUid === friend.uid }" @click="selectFriend(friend)">
-                            <div class="avatar" :style="'background-color: ' + getAvatarColor(friend.nama_lengkap)" x-text="getInitials(friend.nama_lengkap)"></div>
-                            <div class="friend-info">
-                                <span class="friend-name" x-text="friend.nama_lengkap"></span>
-                                <span class="friend-username" x-text="'@' + friend.username"></span>
-                            </div>
-                        </div>
-                    </template>
-                </div>
+<div class="sidebar-title">
+Daftar Teman
+</div>
+<div class="friend-list">
+<div x-show="loadingFriends" style="text-align: center; padding: 20px;">
+<div class="spinner" style="border-top-color: var(--pc); margin: 0 auto;"></div>
+</div>
+<div x-show="!loadingFriends && friends.length === 0" class="empty-state">
+<span class="material-symbols-rounded">person_search</span>
+<p>
+Belum ada teman.
+</p>
+</div>
+<template x-for="friend in friends" :key="friend.uid">
+<div class="friend-item" :class="{ 'active': activeFriendUid === friend.uid }" @click="selectFriend(friend)">
+<div class="avatar" :style="'background-color: ' + getAvatarColor(friend.nama_lengkap)" x-text="getInitials(friend.nama_lengkap)"></div>
+<div class="friend-info">
+<span class="friend-name" x-text="friend.nama_lengkap"></span>
+<span class="friend-username" x-text="'@' + friend.username"></span>
+</div>
+</div>
+</template>
+</div>
 
-                <!-- MENU FOOTER -->
-                <div class="sidebar-footer">
-                    <div style="position: relative;">
-                        <button class="menu-trigger-btn" @click.stop="menuOpen = !menuOpen" @click.away="menuOpen = false">
-                            <span class="material-symbols-rounded">menu</span> Menu
-                        </button>
-                        
-                        <!-- Floating Menu -->
-                        <div x-show="menuOpen" x-transition class="floating-menu">
-                            <div class="menu-item" @click="toggleTheme()">
-                                <span class="material-symbols-rounded" x-text="darkTheme ? 'light_mode' : 'dark_mode'"></span>
-                                <span x-text="darkTheme ? 'Tema Terang' : 'Tema Gelap'"></span>
-                            </div>
-                            <div class="menu-divider"></div>
-                            <div class="menu-section-title">Warna Aksen</div>
-                            <div class="custom-dropdown">
-                                <button class="dropdown-trigger" @click.stop="accentMenuOpen = !accentMenuOpen">
-                                    <div class="color-dot" :style="'background-color: var(--pc)'"></div>
-                                    <span style="margin-left: 10px; flex: 1; text-align: left;" x-text="{
-                                        'blue': 'Biru Tenang',
-                                        'green': 'Hijau Alam',
-                                        'red': 'Merah Berani'
-                                    }[accentColor] || 'Pilih Warna'"></span>
-                                    <span class="material-symbols-rounded" :style="accentMenuOpen ? 'transform: rotate(180deg)' : ''">expand_more</span>
-                                </button>
-                                
-                                <div x-show="accentMenuOpen" @click.away="accentMenuOpen = false" class="dropdown-list">
-                                    <template x-for="opt in [
-                                        {id: 'blue', label: 'Biru', color: '#0061A4'},
-                                        {id: 'green', label: 'Hijau', color: '#006D3B'},
-                                        {id: 'red', label: 'Merah', color: '#BA1A1A'}
-                                    ]">
-                                        <div class="dropdown-item" :class="{ 'active': accentColor === opt.id }" @click="changeAccent(opt.id); accentMenuOpen = false">
-                                            <div class="color-dot" :style="'background-color: ' + opt.color"></div>
-                                            <span x-text="opt.label"></span>
-                                        </div>
-                                    </template>
-                                </div>
-                            </div>
-                            <div class="menu-divider"></div>
-                            <div class="menu-item logout" @click="logout()">
-                                <span class="material-symbols-rounded">logout</span> Keluar
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<!-- MENU FOOTER -->
+<div class="sidebar-footer">
+<div style="position: relative;">
+<button class="menu-trigger-btn" @click.stop="menuOpen = !menuOpen" @click.away="menuOpen = false">
+<span class="material-symbols-rounded">menu</span> Menu
+</button>
 
-            <!-- Chat Area -->
-            <div class="chat-area" :class="{ 'show-mobile': mobview === 'chat' }">
-                <div class="chat-header">
-                    <button class="back-btn" @click="handleBack()">
-                        <span class="material-symbols-rounded">arrow_back_ios_new</span>
-                    </button>
-                    <template x-if="activeFriendUid">
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            <div class="avatar" :style="'background-color: ' + getAvatarColor(activeFriendName)" x-text="getInitials(activeFriendName)"></div>
-                            <span style="font-weight: 800; font-size: 1.1rem; color: var(--pc);" x-text="activeFriendName"></span>
-                        </div>
-                    </template>
-                    <div x-show="!activeFriendUid" style="color: var(--tm); font-weight: 700;">Pilih teman untuk chat</div>
-                </div>
+<!-- Floating Menu -->
+<div x-show="menuOpen" x-transition class="floating-menu">
+<div class="menu-item" @click="openProfileEdit()">
+<span class="material-symbols-rounded">edit_square</span>
+<span>Edit Profil</span>
+</div>
+<div class="menu-divider"></div>
+<div class="menu-item" @click="toggleTheme()">
+<span class="material-symbols-rounded" x-text="darkTheme ? 'light_mode' : 'dark_mode'"></span>
+<span x-text="darkTheme ? 'Tema Terang' : 'Tema Gelap'"></span>
+</div>
+<div class="menu-divider"></div>
+<div class="menu-section-title">
+Warna Aksen
+</div>
+<div class="custom-dropdown">
+<button class="dropdown-trigger" @click.stop="accentMenuOpen = !accentMenuOpen">
+<div class="color-dot" :style="'background-color: var(--pc)'"></div>
+<span style="margin-left: 10px; flex: 1; text-align: left;" x-text="{
+'blue': 'Biru Tenang',
+'green': 'Hijau Alam',
+'red': 'Merah Berani'
+}[accentColor] || 'Pilih Warna'"></span>
+<span class="material-symbols-rounded" :style="accentMenuOpen ? 'transform: rotate(180deg)' : ''">expand_more</span>
+</button>
 
-                <div class="chat-messages" x-ref="messageBox">
-                    <div x-show="!activeFriendUid" class="empty-state">
-                        <span class="material-symbols-rounded">forum</span>
-                        <h3>Tchat Messenger</h3>
-                        <p>Mulai obrolan seru sekarang!</p>
-                    </div>
-                    <div x-show="activeFriendUid && loadingMessages" style="text-align: center; padding: 20px;">
-                        <div class="spinner" style="border-top-color: var(--pc); margin: 0 auto;"></div>
-                    </div>
-                    <template x-for="msg in messages">
-                        <div class="message" :class="msg.pengirimUid === myUid ? 'sent' : 'received'">
-                            <span x-text="msg.teks"></span>
-                            <span class="msg-time" x-text="formatTime(msg.waktu)"></span>
-                        </div>
-                    </template>
-                </div>
+<div x-show="accentMenuOpen" @click.away="accentMenuOpen = false" class="dropdown-list">
+<template x-for="opt in [
+{id: 'blue', label: 'Biru', color: '#0061A4'},
+{id: 'green', label: 'Hijau', color: '#006D3B'},
+{id: 'red', label: 'Merah', color: '#BA1A1A'}
+]">
+<div class="dropdown-item" :class="{ 'active': accentColor === opt.id }" @click="changeAccent(opt.id); accentMenuOpen = false">
+<div class="color-dot" :style="'background-color: ' + opt.color"></div>
+<span x-text="opt.label"></span>
+</div>
+</template>
+</div>
+</div>
+<div class="menu-divider"></div>
+<div class="menu-item logout" @click="logout()">
+<span class="material-symbols-rounded">logout</span> Keluar
+</div>
+</div>
+</div>
+</div>
+</div>
 
-                <div class="chat-input-area">
-                    <input type="text" x-model="chatInput" @keydown.enter="sendMessage()" placeholder="Ketik pesan..." :disabled="!activeFriendUid">
-                    <button class="btn-send-icon" @click="sendMessage()" :disabled="!activeFriendUid">
-                        <span class="material-symbols-rounded">send</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </template>
+<!-- Chat Area -->
+<div class="chat-area" :class="{ 'show-mobile': mobview === 'chat' }">
+<div class="chat-header">
+<button class="back-btn" @click="handleBack()">
+<span class="material-symbols-rounded">arrow_back_ios_new</span>
+</button>
+<template x-if="activeFriendUid">
+<div style="display: flex; align-items: center; gap: 12px; width:100%; flex:1;" id="active-friend">
+<div class="avatar" :style="'background-color: ' + getAvatarColor(activeFriendName)" x-text="getInitials(activeFriendName)"></div>
+<span style="font-weight: 800; font-size: 1.1rem; color: var(--pl);flex:1;" x-text="activeFriendName"></span>
+</div>
+</template>
+<div x-show="!activeFriendUid" style="color: var(--tm); font-weight: 700;">
+Pilih teman untuk chat
+</div>
+</div>
 
-    <script type="module" src="app.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<div class="chat-messages" x-ref="messageBox">
+<div x-show="!activeFriendUid" class="empty-state">
+<span class="material-symbols-rounded">forum</span>
+<h3>Tchat Messenger</h3>
+<p>
+Mulai obrolan seru sekarang!
+</p>
+</div>
+<div x-show="activeFriendUid && loadingMessages" style="text-align: center; padding: 20px;">
+<div class="spinner" style="border-top-color: var(--pc); margin: 0 auto;"></div>
+</div>
+<template x-for="msg in messages">
+<div class="message" :class="msg.pengirimUid === myUid ? 'sent' : 'received'">
+<span x-text="msg.teks"></span>
+<span class="msg-time" x-text="formatTime(msg.waktu)"></span>
+</div>
+</template>
+</div>
 
-    <!-- CUSTOM MODAL -->
-    <div x-show="modal.show" x-transition.opacity class="modal-overlay" style="display: none;">
-        <div class="modal-box" @click.away="closeModal()">
-            <h3 x-text="modal.title"></h3>
-            <p x-text="modal.message"></p>
-            <div class="modal-actions">
-                <button class="btn-secondary" @click="closeModal()">Batal</button>
-                <button class="btn-primary" @click="handleModalConfirm()" x-text="modal.type === 'confirm' ? 'Ya, Lanjutkan' : 'Oke'"></button>
-            </div>
-        </div>
-    </div>
+<div class="chat-input-area">
+<input type="text" x-model="chatInput" @keydown.enter="sendMessage()" placeholder="Ketik pesan..." :disabled="!activeFriendUid">
+<button class="btn-send-icon" @click="sendMessage()" :disabled="!activeFriendUid">
+<span class="material-symbols-rounded">send</span>
+</button>
+</div>
+</div>
+</div>
+</template>
+
+<script type="module" src="app.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+<!-- PROFILE EDIT MODAL -->
+<div x-show="profileModal" x-transition.opacity class="modal-overlay" style="display: none;">
+<div class="modal-box" @click.away="profileModal = false">
+<h3>Edit Profil</h3>
+<p style="font-size: 0.9rem; color: var(--tm); margin-bottom: 20px;">
+Anda hanya dapat mengubah nama lengkap Anda.
+</p>
+
+<div style="text-align: left; margin-bottom: 20px;">
+<label style="display: block; font-size: 0.8rem; font-weight: 800; color: var(--pc); margin-bottom: 8px; margin-left: 12px;">Nama Lengkap</label>
+<input type="text" x-model="tempFullName"
+style="width: 100%; padding: 14px 20px; background: var(--bg); border: 2px solid transparent; border-radius: 20px; outline: none; font-family: var(--f); font-weight: 600; color: var(--sc);"
+placeholder="Masukkan nama lengkap...">
+</div>
+
+<div class="modal-actions">
+<button class="btn-secondary" @click="profileModal = false">Batal</button>
+<button class="btn-primary" @click="saveProfile()" :disabled="authLoading">
+<template x-if="!authLoading">
+<span>Simpan Perubahan</span>
+</template>
+<template x-if="authLoading">
+<div class="spinner" style="margin: 0 auto;"></div>
+</template>
+</button>
+</div>
+</div>
+</div>
+
+<!-- CUSTOM MODAL -->
+<div x-show="modal.show" x-transition.opacity class="modal-overlay" style="display: none;">
+<div class="modal-box" @click.away="closeModal()">
+<h3 x-text="modal.title"></h3>
+<p x-text="modal.message"></p>
+<div class="modal-actions">
+<button class="btn-secondary" @click="closeModal()">Batal</button>
+<button class="btn-primary" @click="handleModalConfirm()" x-text="modal.type === 'confirm' ? 'Ya, Lanjutkan' : 'Oke'"></button>
+</div>
+</div>
+</div>
 </body>
 </html>
-al.type === 'confirm' ? 'Ya, Lanjutkan' : 'Oke'"></button>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
- === 'confirm' ? 'Ya, Lanjutkan' : 'Oke'"></button>
-            </div>
-        </div>
-    </div>
+</div>
+</div>
+</div>
 </body>
 </html>
