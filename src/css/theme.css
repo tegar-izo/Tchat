@@ -1,0 +1,34 @@
+:root {
+    /* Default Blue Accent */
+    --pc: #0061a4;
+    --ph: #2579be;
+    --pl: #d1e4ff;
+    --sent-text: #ffffff;
+
+    /* Base Colors */
+    --bg: #f3edf7;
+    --w: #fffbfe;
+    --tm: #49454f;
+    --sc: #21005d;
+
+    /* Radius */
+    --rd-l: 32px;
+    --rd-m: 24px;
+    --rd-s: 16px;
+    --rd-p: 100px;
+
+    --shd: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --f: "Quicksand", sans-serif;
+
+    /* Blur Effects */
+    --blur-s: 8px;
+    --blur-m: 20px;
+    --blur-l: 30px;
+    --glass-blur: 0px;
+}
+
+:root.dark {
+    --tm: #938f99;
+    --sc: #e6e1e5;
+    --shd: 0 4px 24px rgba(0, 0, 0, 0.5);
+}

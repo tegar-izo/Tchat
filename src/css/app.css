@@ -1,4 +1,223 @@
-/* CHAT PAGE LAYOUT */
+/* ==========================================================================
+   1. GLOBAL & CORE STYLES (Ex-app.css)
+   ========================================================================== */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    transition:
+        background-color 0.3s,
+        color 0.3s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: var(--f);
+    min-height: 100vh;
+    margin: 0;
+    color: var(--sc);
+    background-color: var(--bg);
+    overflow: hidden;
+}
+
+.d-none {
+    display: none !important;
+}
+
+/* ================= UTILS ================= */
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.material-symbols-rounded {
+    font-variation-settings:
+        "FILL" 1,
+        "wght" 400,
+        "GRAD" 0,
+        "opsz" 24;
+    font-size: 1.4rem;
+}
+
+/* MODAL */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #00000080;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.modal-box {
+    background: var(--w);
+    padding: 40px 32px;
+    border-radius: 40px;
+    width: 90%;
+    max-width: 420px;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+    animation: auth-appear 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.modal-box input {
+    width: 100%;
+    padding: 14px 20px;
+    background: var(--bg);
+    border: 2px solid transparent;
+    color: var(--sc);
+    border-radius: var(--rd-m);
+    outline: none;
+    font-family: var(--f);
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.2s;
+}
+.modal-box input:focus {
+    border-color: var(--pc);
+    background: var(--w);
+}
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+.modal-actions button {
+    flex: 1;
+    padding: 14px;
+    border-radius: 20px;
+    border: none;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: var(--f);
+    transition: all 0.2s;
+}
+.btn-primary {
+    background: var(--pc);
+    color: #fff;
+}
+.btn-secondary {
+    background: var(--bg);
+    color: var(--sc);
+}
+.modal-actions button:active {
+    transform: scale(1.07);
+}
+
+/* ==========================================================================
+   2. AUTHENTICATION SCREENS (Ex-auth.css)
+   ========================================================================== */
+.auth-body {
+    height: 100vh;
+    background: linear-gradient(135deg, var(--pl), var(--bg));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.auth-container {
+    background: var(--w);
+    padding: 40px 32px;
+    border-radius: var(--rd-l);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-shadow: var(--shd);
+    animation: auth-appear 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes auth-appear {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.auth-container h2 {
+    color: var(--pc);
+    font-weight: 800;
+    font-size: 1.8rem;
+}
+
+.auth-container input {
+    width: 100%;
+    padding: 16px 24px;
+    background: var(--bg);
+    border: 2px solid transparent;
+    color: var(--sc);
+    border-radius: var(--rd-m);
+    outline: none;
+    font-size: 1rem;
+    font-family: var(--f);
+    transition: all 0.2s;
+}
+
+.auth-container input:focus {
+    border-color: var(--pc);
+    background: var(--w);
+}
+
+.auth-container button {
+    padding: 16px;
+    background-color: var(--pc);
+    color: #fff;
+    border: none;
+    border-radius: var(--rd-p);
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1rem;
+    font-family: var(--f);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s;
+}
+
+.auth-container button:active {
+    background-color: var(--ph);
+    transform: scale(0.98);
+}
+
+.link-with-icon {
+    color: var(--pc);
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+}
+.link-with-icon:active {
+    opacity: 0.7;
+}
+
+/* ==========================================================================
+   3. CHAT INTERFACE & LAYOUT (Ex-chat.css)
+   ========================================================================== */
 .chat-body {
     display: flex;
     height: 100vh;
@@ -14,8 +233,10 @@
     flex-direction: column;
 }
 
-.dark .sidebar, .dark .sidebar-footer, .dark .chat-header {
-    border-color: rgba(255,255,255,0.1);
+.dark .sidebar,
+.dark .sidebar-footer,
+.dark .chat-header {
+    border-color: rgba(255, 255, 255, 0.1);
 }
 
 .user-profile {
@@ -32,7 +253,7 @@
 .user-profile .avatar {
     width: 48px;
     height: 48px;
-    background: rgba(255,255,255,0.2);
+    background: rgba(255, 255, 255, 0.2);
     border-radius: 18px;
     display: flex;
     justify-content: center;
@@ -85,7 +306,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transition: all 0.2s;
 }
 
@@ -128,7 +349,7 @@
 .friend-item.active {
     background: var(--pc);
     color: #fff;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 .friend-item .avatar {
@@ -141,7 +362,7 @@
     color: #fff;
     font-weight: 700;
     font-size: 1.2rem;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .friend-name {
@@ -160,16 +381,23 @@
     display: flex;
     flex-direction: column;
     background: var(--bg);
+    position: relative;
 }
 
 .chat-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
     width: 100%;
-    padding: 12px;
+    padding: 16px 20px;
     background: var(--pc);
-    border-radius: 0 0 30px 30px;
+    border-radius: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
     z-index: 10;
     display: flex;
-    flex-direction: column; /* Mengatur susunan secara vertikal */
+    flex-direction: column;
     gap: 0;
     transition: all 0.3s ease;
 }
@@ -188,7 +416,7 @@
     width: 56px;
     height: 56px;
     border-radius: 30px;
-    flex-shrink: none;
+    flex-shrink: 0;
     cursor: pointer;
     justify-content: center;
     align-items: center;
@@ -212,12 +440,28 @@
 }
 
 .chat-messages {
-    flex: 1;
-    padding: 24px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 100px 24px 90px 24px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: 16px;
+    scroll-behavior: smooth;
+    transition: padding 0.3s ease;
+}
+
+/* Adjust scroll padding when search or reply bar is active */
+.chat-area:has(#chat-search-bar-header:not(.d-none)) .chat-messages {
+    padding-top: 145px;
+}
+
+.chat-area:has(#reply-preview-bar:not([style*="display: none"]))
+    .chat-messages {
+    padding-bottom: 145px;
 }
 
 .message-wrapper {
@@ -285,16 +529,20 @@
 }
 
 .chat-input-area {
-    position: sticky;
+    position: fixed;
     bottom: 0px;
-    padding: 8px;
+    left: 0px;
+    right: 0px;
+    padding: 12px 16px;
     display: flex;
-    flex-direction: column; /* Ubah ke kolom agar reply bisa di atas */
+    flex-direction: column;
     gap: 8px;
     width: 100%;
-    background: var(--pc);
-    border-radius: 30px 30px 0 0;
-    box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+    background: var(--w);
+    border-radius: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.05);
+    z-index: 10;
     box-sizing: border-box;
 }
 
@@ -305,15 +553,13 @@
     align-items: center;
 }
 
-/* Update Reply Styling inside Input Area */
 .reply-area {
     padding: 10px 16px;
-    background: rgba(255,255,255,0.15);
-    backdrop-filter: blur(10px);
+    background: var(--bg);
     display: flex;
     align-items: center;
     border-radius: 20px;
-    border-left: 4px solid #fff;
+    border-left: 4px solid var(--pc);
     max-width: 100%;
     overflow: hidden;
     box-sizing: border-box;
@@ -321,17 +567,24 @@
 }
 
 @keyframes reply-pop-in {
-    from { transform: scaleY(0); opacity: 0; }
-    to { transform: scaleY(1); opacity: 1; }
+    from {
+        transform: scaleY(0);
+        opacity: 0;
+    }
+    to {
+        transform: scaleY(1);
+        opacity: 1;
+    }
 }
 
 .reply-area span {
-    color: #fff !important;
+    color: var(--pc) !important;
     font-weight: 800;
 }
 
 .reply-area p {
-    color: rgba(255,255,255,0.8) !important;
+    color: var(--sc) !important;
+    opacity: 0.8;
 }
 
 .chat-input-area input {
@@ -359,7 +612,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
     flex-shrink: 0;
 }
 
@@ -367,7 +620,7 @@
     position: sticky;
     bottom: 0;
     padding: 16px;
-    border-top: 1px solid rgba(0,0,0,0.05);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
     background: var(--w);
 }
 
@@ -391,12 +644,22 @@
     bottom: 85px;
     left: 16px;
     right: 16px;
-    background: color-mix(in srgb, var(--w) 85%, transparent);
-    backdrop-filter: blur(30px);
+    background: var(--w);
     border-radius: 28px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
     padding: 10px;
     z-index: 100;
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+    pointer-events: none;
+    transition:
+        opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.floating-menu.active {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    pointer-events: auto;
 }
 
 .menu-item {
@@ -411,7 +674,7 @@
 
 .menu-divider {
     height: 1px;
-    background: rgba(0,0,0,0.05);
+    background: rgba(0, 0, 0, 0.05);
     margin: 8px 0;
 }
 
@@ -434,18 +697,6 @@
     font-weight: 700;
 }
 
-.dropdown-list {
-    position: absolute;
-    bottom: 100%;
-    left: 8px;
-    right: 8px;
-    background: var(--w);
-    border-radius: 20px;
-    box-shadow: var(--shd);
-    margin-bottom: 12px;
-    overflow: hidden;
-}
-
 .empty-state {
     height: 100%;
     display: flex;
@@ -460,7 +711,7 @@
 .header-icon-btn {
     width: 40px;
     height: 40px;
-    background: rgba(255,255,255,0.15);
+    background: rgba(255, 255, 255, 0.15);
     border: none;
     border-radius: 12px;
     color: #fff;
@@ -475,14 +726,14 @@
     padding: 12px 20px;
     border-radius: 18px;
     border: none;
-    background: rgba(255,255,255,0.2);
+    background: rgba(255, 255, 255, 0.2);
     color: #fff;
     outline: none;
     font-family: var(--f);
     font-weight: 600;
 }
 .search-bar-header input::placeholder {
-    color: rgba(255,255,255,0.6);
+    color: rgba(255, 255, 255, 0.6);
 }
 
 .message.highlight {
@@ -497,10 +748,20 @@
     background: var(--w);
     border-radius: 20px;
     box-shadow: var(--shd);
-    border: 1px solid rgba(0,0,0,0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
     margin-bottom: 12px;
     overflow: hidden;
-    animation: auth-appear 0.2s ease-out;
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+    pointer-events: none;
+    transition:
+        opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.dropdown-list.active {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    pointer-events: auto;
 }
 
 .dropdown-item {
@@ -556,7 +817,7 @@
 
 .header-icon-btn:active {
     transform: scale(0.9);
-    background: rgba(255,255,255,0.3);
+    background: rgba(255, 255, 255, 0.3);
 }
 
 .btn-send-icon:active:not(:disabled) {
@@ -564,47 +825,8 @@
     background: var(--ph);
 }
 
-.back-btn {
-    display: none;
-    background: var(--w);
-    color: var(--pc);
-    border: none;
-    width: 56px;
-    height: 56px;
-    border-radius: 30px;
-    flex-shrink: 0;
-    cursor: pointer;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.2s;
-}
-
-.back-btn:active {
-    background: var(--pl);
-    opacity: 0.8;
-}
-
-@media (max-width: 768px) {
-    .sidebar {
-        width: 100%;
-        display: none;
-    }
-    .sidebar.show-mobile {
-        display: flex;
-    }
-    .chat-area {
-        width: 100%;
-        display: none;
-    }
-    .chat-area.show-mobile {
-        display: flex;
-    }
-    .back-btn {
-        display: flex;
-    }
-}
 .reply-preview-in-msg {
-    background: rgba(0,0,0,0.05);
+    background: rgba(0, 0, 0, 0.05);
     padding: 8px;
     border-radius: 12px;
     border-left: 3px solid var(--pc);
@@ -612,16 +834,22 @@
     max-width: 100%;
     overflow: hidden;
 }
-.message.sent .reply-preview-in-msg { background: rgba(255,255,255,0.2); border-left-color: #fff; }
+.message.sent .reply-preview-in-msg {
+    background: rgba(255, 255, 255, 0.2);
+    border-left-color: #fff;
+}
 
-/* Context Menu Animation */
+/* Context Menu Overlay */
+.msg-menu-overlay {
+    transition: opacity 0.2s ease;
+}
+
+/* Context Menu Box styling */
 .msg-menu-box {
     position: absolute;
     background: var(--w);
-    backdrop-filter: blur(var(--blur-l));
-    background: color-mix(in srgb, var(--w) 85%, transparent);
     border-radius: 24px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     padding: 10px;
     min-width: 200px;
     transform: translate(-50%, -100%);
@@ -629,19 +857,22 @@
     pointer-events: auto;
 }
 
-/* Alpine.js transition classes for better reliability */
-.msg-menu-overlay {
-    transition: opacity 0.2s ease;
-}
-
 @keyframes menu-pop-in {
-    0% { transform: translate(-50%, -100%) scale(0.8); opacity: 0; }
-    100% { transform: translate(-50%, -100%) scale(1); opacity: 1; }
+    0% {
+        transform: translate(-50%, -100%) scale(0.8);
+        opacity: 0;
+    }
+    100% {
+        transform: translate(-50%, -100%) scale(1);
+        opacity: 1;
+    }
 }
 
-[x-show="msgMenuOpen"] .msg-menu-box {
+/* Play animation when overlay is visible */
+.msg-menu-overlay:not(.d-none) .msg-menu-box {
     animation: menu-pop-in 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
+
 .reaction-row {
     display: flex;
     gap: 8px;
@@ -649,45 +880,15 @@
     justify-content: center;
 }
 .reaction-btn {
-    background: none; border: none; font-size: 1.5rem; cursor: pointer; transition: transform 0.2s;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.2s;
 }
-.reaction-btn:active { transform: scale(1.4); }
-
-@media (max-width: 768px) {
-    .sidebar {
-        width: 100%;
-        display: none;
-    }
-    .sidebar.show-mobile {
-        display: flex;
-    }
-    .chat-area {
-        width: 100%;
-        display: none;
-    }
-    .chat-area.show-mobile {
-        display: flex;
-    }
-    .back-btn {
-        display: flex;
-    }
+.reaction-btn:active {
+    transform: scale(1.4);
 }
-e(-50%, -100%) scale(1); opacity: 1; }
-}
-
-[x-show="msgMenuOpen"] .msg-menu-box {
-    animation: menu-pop-in 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-}
-.reaction-row {
-    display: flex;
-    gap: 8px;
-    padding: 5px;
-    justify-content: center;
-}
-.reaction-btn {
-    background: none; border: none; font-size: 1.5rem; cursor: pointer; transition: transform 0.2s;
-}
-.reaction-btn:active { transform: scale(1.4); }
 
 @media (max-width: 768px) {
     .sidebar {
