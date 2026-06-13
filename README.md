@@ -3,20 +3,25 @@
 A modern, responsive, and real-time chat application inspired by Telegram, built with **Material Expressive** design principles.
 
 ![Firebase](https://img.shields.io/badge/firebase-%23039BE5.svg?style=for-the-badge&logo=firebase&logoColor=white)
-![Alpine.js](https://img.shields.io/badge/alpine.js-%238BC0D0.svg?style=for-the-badge&logo=alpine.js&logoColor=black)
+![JavaScript](https://img.shields.io/badge/javascript-%23F7DF1E.svg?style=for-the-badge&logo=javascript&logoColor=black)
 ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
 
 ## ✨ Fitur Utama
 - **Real-time Chat**: Kirim dan terima pesan secara instan menggunakan Firebase Realtime Database.
-- **Sistem Auth Unik**: Login hanya menggunakan username (menggunakan teknik *shadow domain*).
+- **Sistem Auth Unik**: Login hanya menggunakan username (menggunakan teknik *dummy domain* `@tchat.com` dengan Firebase Authentication).
 - **Material Expressive UI**: Tampilan modern dengan animasi halus, sudut membulat (*extra rounded*), dan palet warna Material 3.
-- **Avatar Otomatis**: Avatar unik berbasis inisial nama dengan warna pastel yang dihasilkan secara dinamis.
-- **Responsive Design**: Optimal untuk tampilan Desktop maupun Mobile.
+- **Edit Profil**: Kemampuan untuk mengubah nama lengkap langsung dari menu aplikasi.
+- **Reaksi & Balas Pesan**: Berikan reaksi emoji (❤️, 😂, 😮, 😢, 🔥, 👍) dan balas (*reply*) pesan secara langsung dengan klik kanan/tahan pesan.
+- **Pencarian Pesan**: Cari riwayat percakapan di dalam chat room aktif berdasarkan kata kunci.
+- **Hapus Pesan & Chat**: Hapus pesan tertentu atau bersihkan seluruh riwayat obrolan secara permanen.
+- **Kustomisasi Tema & Aksen**: Mendukung Tema Gelap (Dark Mode) serta pilihan warna aksen (Biru, Hijau, Merah).
+- **Avatar Otomatis**: Avatar unik berbasis inisial nama dengan warna dinamis berbasis hash nama.
+- **Responsive Design**: Tampilan yang dioptimalkan untuk perangkat Desktop maupun Mobile.
 - **Search & Add Friends**: Cari teman berdasarkan username dan tambahkan ke daftar kontak Anda.
 
 ## 🛠️ Tech Stack
-- **Frontend**: Alpine.js (State Management), Vanilla CSS (Custom Variables).
+- **Frontend**: Vanilla JavaScript (ES6 Modules, Custom UI State Management), Vanilla CSS (Custom Variables).
 - **Backend**: Firebase Authentication & Realtime Database.
 - **Icons**: Google Material Symbols Rounded.
 
@@ -30,7 +35,7 @@ A modern, responsive, and real-time chat application inspired by Telegram, built
    cd T-chat
    ```
 3. **Jalankan menggunakan Live Server**:
-   Buka file `index.html` di browser Anda (disarankan menggunakan ekstensi VS Code *Live Server*).
+   Buka file `index.html` di browser Anda (disarankan menggunakan ekstensi VS Code *Live Server* atau local HTTP server).
 
 ## 🌐 Deployment (GitHub Pages)
 Project ini siap dihosting langsung di GitHub Pages karena hanya terdiri dari file statis.
@@ -48,3 +53,4 @@ Project ini dibuat untuk tujuan pembelajaran. Bebas digunakan dan dimodifikasi.
 
 ---
 Dibuat dengan ❤️ menggunakan Gemini CLI.
+
