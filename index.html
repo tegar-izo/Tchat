@@ -78,7 +78,7 @@
             <div class="spinner d-none" style="margin: 0 auto;"></div>
         </button>
         <p style="font-size: 0.9rem; color: var(--tm);">
-            Belum punya akun? <a id="link-to-register" class="link-with-icon">Daftar sekarang</a>
+            Belum punya akun? <br> <a id="link-to-register" class="link-with-icon">Daftar sekarang</a>
         </p>
     </div>
 
@@ -101,7 +101,7 @@
             <div class="spinner d-none" style="margin: 0 auto;"></div>
         </button>
         <p style="font-size: 0.9rem; color: var(--tm);">
-            Sudah punya akun? <a id="link-to-login" class="link-with-icon">Login disini</a>
+            Sudah punya akun? <br><a id="link-to-login" class="link-with-icon">Login disini</a>
         </p>
     </div>
 </div>
@@ -193,15 +193,15 @@
     <!-- CHAT AREA -->
     <div id="chat-area" class="chat-area">
         <div class="chat-header">
-            <div style="display: flex; align-items: center; gap: 12px; width: 100%; flex: 1;">
+            <div style="display: flex; align-items: center; gap: 8px; width: 100%; flex: 1;">
                 <button id="btn-back-to-sidebar" class="back-btn">
-                    <span class="material-symbols-rounded">arrow_back_ios_new</span>
+                    <span class="material-symbols-rounded">arrow_back</span>
                 </button>
                 
-                <div id="active-friend-header-details" style="display: flex; align-items: center; gap: 12px; flex: 1;" class="d-none">
+                <div id="active-friend-header-details" class="d-none">
                     <div id="active-friend-avatar" class="avatar">?</div>
                     <div style="flex: 1;">
-                        <span id="active-friend-name" style="font-weight: 800; font-size: 1.1rem; color: #fff; display: block;"></span>
+                        <span id="active-friend-name" ></span>
                         <span id="active-friend-search-status" class="d-none" style="font-size: 0.7rem; color: #fff; opacity: 0.8;">Mode Cari Aktif</span>
                     </div>
                 </div>
@@ -258,6 +258,7 @@
 
         <!-- Chat Input Area -->
         <div id="chat-input-area" class="chat-input-area d-none">
+            <div class="input-column">
             <!-- Reply Preview -->
             <div id="reply-preview-bar" class="reply-area" style="display: none;">
                 <div style="flex: 1; border-left: 3px solid var(--pc); padding-left: 10px; overflow: hidden; min-width: 0;">
@@ -274,6 +275,7 @@
                 <button id="btn-send-message" class="btn-send-icon">
                     <span class="material-symbols-rounded">send</span>
                 </button>
+            </div>
             </div>
         </div>
     </div>

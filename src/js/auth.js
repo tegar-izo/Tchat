@@ -53,8 +53,7 @@ export async function handleRegister(state, regFullName, regUsername, regPasswor
 
 export async function handleLogin(state, loginUsername, loginPassword, uiCallbacks) {
     if (!loginUsername || !loginPassword) {
-        uiCallbacks.showModal('Peringatan', 'Username dan password harus diisi!');
-        return;
+        uiCallbacks.showModal('Peringatan', 'Gabisa masuk kalau username dan password-nya belum diisi. Yuk, isi dulu!');return;
     }
     state.authLoading = true;
     uiCallbacks.updateAuthLoading(true);
@@ -62,10 +61,10 @@ export async function handleLogin(state, loginUsername, loginPassword, uiCallbac
 
     try {
         await signInWithEmailAndPassword(auth, email, loginPassword);
-        uiCallbacks.showModal('Selamat Datang', 'Login berhasil!');
+        uiCallbacks.showModal('Selamat Datang', 'Akhirnya sampai juga! Akun kamu udah siap digunakan nih. Enjoy ya!');
         uiCallbacks.clearLoginInputs();
     } catch (error) {
-        uiCallbacks.showModal('Gagal Masuk', 'Username atau password salah.');
+        uiCallbacks.showModal('Gagal Masuk', 'Gomennasai... Kayaknya username atau password yang kamu masukin masih salah deh.');
     } finally {
         state.authLoading = false;
         uiCallbacks.updateAuthLoading(false);

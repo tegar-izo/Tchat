@@ -14,11 +14,13 @@
 body {
     font-family: var(--f);
     min-height: 100vh;
+    min-height: 100dvh;
     margin: 0;
     color: var(--sc);
     background-color: var(--bg);
     overflow: hidden;
 }
+
 
 .d-none {
     display: none !important;
@@ -68,8 +70,9 @@ button:disabled {
     z-index: 1000;
 }
 .modal-box {
-    background: var(--w);
-    padding: 40px 32px;
+    background: color-mix(in srgb, var(--pl) 70%, transparent);
+    padding: 24px;
+    backdrop-filter: blur(30px);
     border-radius: 40px;
     width: 90%;
     max-width: 420px;
@@ -80,8 +83,8 @@ button:disabled {
 .modal-box input {
     width: 100%;
     padding: 14px 20px;
-    background: var(--bg);
-    border: 2px solid transparent;
+    background: color-mix(in srgb, var(--bg) 50%, transparent);
+    border: 1px solid #ffffff30;
     color: var(--sc);
     border-radius: var(--rd-m);
     outline: none;
@@ -92,7 +95,7 @@ button:disabled {
 }
 .modal-box input:focus {
     border-color: var(--pc);
-    background: var(--w);
+    background: var(--bg);
 }
 .modal-actions {
     display: flex;
@@ -102,9 +105,9 @@ button:disabled {
 .modal-actions button {
     flex: 1;
     padding: 14px;
-    border-radius: 20px;
-    border: none;
+    border-radius: var(--rd-m);
     font-weight: 800;
+    border: none;
     cursor: pointer;
     font-family: var(--f);
     transition: all 0.2s;
@@ -118,7 +121,8 @@ button:disabled {
     color: var(--sc);
 }
 .modal-actions button:active {
-    transform: scale(1.07);
+    /* transform: scale(1.07); */
+    border-radius: var(--rd-s);
 }
 
 /* ==========================================================================
@@ -126,7 +130,8 @@ button:disabled {
    ========================================================================== */
 .auth-body {
     height: 100vh;
-    background: linear-gradient(135deg, var(--pl), var(--bg));
+    height: 100dvh;
+    background: linear-gradient(-45deg, var(--ph), var(--bg));
     display: flex;
     justify-content: center;
     align-items: center;
@@ -134,8 +139,10 @@ button:disabled {
 }
 
 .auth-container {
-    background: var(--w);
+    background: color-mix(in srgb, var(--w)50%, transparent);
+    backdrop-filter:blur(30px);
     padding: 40px 32px;
+    /* border: 1px solid #ffffff30; */
     border-radius: var(--rd-l);
     width: 100%;
     max-width: 400px;
@@ -143,7 +150,7 @@ button:disabled {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    box-shadow: var(--shd);
+    /* box-shadow: var(--shd); */
     animation: auth-appear 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -167,10 +174,10 @@ button:disabled {
 .auth-container input {
     width: 100%;
     padding: 16px 24px;
-    background: var(--bg);
-    border: 2px solid transparent;
+    background: color-mix(in srgb, var(--bg) 70%, transparent);
+    border: 1px solid #ffffff30;
     color: var(--sc);
-    border-radius: var(--rd-m);
+    border-radius: var(--rd-p);
     outline: none;
     font-size: 1rem;
     font-family: var(--f);
@@ -179,7 +186,7 @@ button:disabled {
 
 .auth-container input:focus {
     border-color: var(--pc);
-    background: var(--w);
+    background: var(--bg);
 }
 
 .auth-container button {
@@ -187,7 +194,7 @@ button:disabled {
     background-color: var(--pc);
     color: #fff;
     border: none;
-    border-radius: var(--rd-p);
+    border-radius: var(--rd-l);
     cursor: pointer;
     font-weight: 700;
     font-size: 1rem;
@@ -202,7 +209,7 @@ button:disabled {
 
 .auth-container button:active {
     background-color: var(--ph);
-    transform: scale(0.98);
+    border-radius: var(--rd-s);
 }
 
 .link-with-icon {
@@ -210,9 +217,11 @@ button:disabled {
     font-weight: 700;
     cursor: pointer;
     text-decoration: none;
+    border-radius: var(--rd-p);
+    padding: 4px 8px;
 }
 .link-with-icon:active {
-    opacity: 0.7;
+    background: #00000030;
 }
 
 /* ==========================================================================
@@ -221,6 +230,7 @@ button:disabled {
 .chat-body {
     display: flex;
     height: 100vh;
+    height: 100dvh;
     background-color: var(--bg);
     position: relative;
     z-index: 5;
@@ -241,12 +251,12 @@ button:disabled {
 
 .user-profile {
     background: var(--pc);
-    padding: 24px 20px;
+    padding: 12px;
     color: #fff;
     display: flex;
     align-items: center;
     gap: 12px;
-    border-radius: 0 0 var(--rd-m) var(--rd-m);
+    border-radius: var(--rd-p);
     box-shadow: var(--shd);
 }
 
@@ -254,7 +264,8 @@ button:disabled {
     width: 48px;
     height: 48px;
     background: rgba(255, 255, 255, 0.2);
-    border-radius: 18px;
+    border-radius: 50%;
+    border: 1px solid #ffffff30;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -263,9 +274,9 @@ button:disabled {
 }
 
 .search-box {
-    padding: 16px;
+    padding: 12px;
     display: flex;
-    gap: 10px;
+    gap: 8px;
 }
 
 .search-inner {
@@ -275,7 +286,7 @@ button:disabled {
     padding: 4px 16px;
     display: flex;
     align-items: center;
-    border: 2px solid transparent;
+    border: 1px solid color-mix(in srgb, var(--pc) 30%, transparent);
     transition: all 0.2s;
 }
 
@@ -296,23 +307,23 @@ button:disabled {
 }
 
 .btn-add {
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
     background: var(--pc);
     color: #fff;
     border: none;
-    border-radius: 18px;
+    border-radius: 50%;
     cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s;
+    transition: all 0.25s;
 }
 
 .btn-add:active {
     background: var(--ph);
-    transform: scale(0.95);
+    border-radius: var(--rd-s);
 }
 
 .sidebar-title {
@@ -327,24 +338,25 @@ button:disabled {
 .friend-list {
     flex: 1;
     overflow-y: auto;
-    padding: 0 12px;
+    padding: 12px;
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
 .friend-item {
-    padding: 12px 16px;
-    border-radius: var(--rd-m);
+    padding: 12px;
+    border-radius: var(--rd-p);
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
     cursor: pointer;
     transition: all 0.2s;
+    background: var(--pl);
 }
 
 .friend-item:active {
-    background: var(--bg);
+    background: var(--ph);
 }
 .friend-item.active {
     background: var(--pc);
@@ -355,7 +367,7 @@ button:disabled {
 .friend-item .avatar {
     width: 52px;
     height: 52px;
-    border-radius: 20px;
+    border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -377,6 +389,8 @@ button:disabled {
 
 /* CHAT AREA */
 .chat-area {
+    height: 100vh;
+    height: 100dvh;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -390,32 +404,37 @@ button:disabled {
     left: 0;
     right: 0;
     width: 100%;
-    padding: 16px 20px;
-    background: var(--pc);
-    border-radius: 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+    padding:12px;
+    background: linear-gradient(to bottom, var(--pl), transparent);
     z-index: 10;
     display: flex;
+    gap: 12px;
     flex-direction: column;
-    gap: 0;
     transition: all 0.3s ease;
 }
-
+.back-btn,
+#active-friend-header-details,
+.header-icon-btn,
+.search-bar-header input,
+.input-column{
+    backdrop-filter: blur(var(--blur-s));
+    background: color-mix(in srgb, var(--pc) 50%, transparent);
+    border: 1px solid #ffffff30;    
+}
 .search-bar-header {
     width: 100%;
     overflow: hidden;
-    padding-top: 10px;
+    padding: 4px;
+    border-radius: var(--rd-p);
+    
 }
 
 .back-btn {
     display: none;
-    background: var(--w);
     color: var(--pc);
-    border: none;
-    width: 56px;
-    height: 56px;
-    border-radius: 30px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
     flex-shrink: 0;
     cursor: pointer;
     justify-content: center;
@@ -424,19 +443,32 @@ button:disabled {
 }
 
 .back-btn:active {
-    background: var(--pl);
-    opacity: 0.8;
+    border-radius: var(--rd-s);
+}
+#active-friend-header-details {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    padding: 4px;
+    border-radius: var(--rd-p);
 }
 
 .chat-header .avatar {
-    width: 48px;
-    height: 48px;
-    border-radius: 14px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     color: #fff;
     font-weight: 700;
+}
+#active-friend-name {
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--w);
 }
 
 .chat-messages {
@@ -490,7 +522,7 @@ button:disabled {
 .message:active {
     opacity: 0.9;
     transform: scale(0.98);
-    transition: transform 0.1s;
+    transition: transform 0.2s ease-in-out;
 }
 
 @keyframes msg-appear {
@@ -529,36 +561,39 @@ button:disabled {
 }
 
 .chat-input-area {
-    position: fixed;
+    position: absolute;
     bottom: 0px;
     left: 0px;
     right: 0px;
-    padding: 12px 16px;
     display: flex;
     flex-direction: column;
     gap: 8px;
     width: 100%;
-    background: var(--w);
-    border-radius: 0;
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
-    box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.05);
+    background: linear-gradient(to top, var(--pl), transparent);
+    padding: 12px;
     z-index: 10;
     box-sizing: border-box;
 }
-
+.input-column {
+    border-radius: var(--rd-m);
+    display: flex;
+    gap: 4px;
+    flex-direction:column;
+    padding: 4px;
+}
 .chat-input-row {
     display: flex;
-    gap: 8px;
+    gap: 4px;
     width: 100%;
     align-items: center;
 }
 
 .reply-area {
-    padding: 10px 16px;
-    background: var(--bg);
+    padding: 12px;
+    background: color-mix(in srgb,var(--bg) 70%, transparent);
     display: flex;
     align-items: center;
-    border-radius: 20px;
+    border-radius: var(--rd-m);
     border-left: 4px solid var(--pc);
     max-width: 100%;
     overflow: hidden;
@@ -590,7 +625,7 @@ button:disabled {
 .chat-input-area input {
     flex: 1;
     padding: 14px 20px;
-    background: var(--w);
+    background: color-mix(in srgb,var(--w) 70%, transparent);
     border: none;
     border-radius: var(--rd-p);
     outline: none;
@@ -602,11 +637,11 @@ button:disabled {
 }
 
 .btn-send-icon {
-    width: 50px;
-    height: 50px;
-    background: var(--pl);
-    color: var(--pc);
-    border-radius: 100px;
+    width: 48px;
+    height: 48px;
+    background: var(--pc);
+    color: var(--w);
+    border-radius: 50%;
     border: none;
     cursor: pointer;
     display: flex;
@@ -614,6 +649,7 @@ button:disabled {
     align-items: center;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
     flex-shrink: 0;
+    transition: all 0.2s ease-in-out
 }
 
 .sidebar-footer {
@@ -626,17 +662,18 @@ button:disabled {
 
 .menu-trigger-btn {
     width: 100%;
-    padding: 14px;
-    background: var(--bg);
+    padding: 12px;
+    background: var(--pc);
     border: none;
-    border-radius: 18px;
-    color: var(--sc);
+    border-radius: var(--rd-p);
+    color: var(--w);
     font-weight: 800;
     cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 10px;
+    transition: all 0.2s ease-in-out;
 }
 
 .floating-menu {
@@ -644,11 +681,12 @@ button:disabled {
     bottom: 85px;
     left: 16px;
     right: 16px;
-    background: var(--w);
-    border-radius: 28px;
+    background: color-mix(in srgb, var(--pl) 70%, transparent);
+    border-radius: var(--rd-m);
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-    padding: 10px;
+    padding: 8px;
     z-index: 100;
+    backdrop-filter: blur(30px);
     opacity: 0;
     transform: scale(0.95) translateY(10px);
     pointer-events: none;
@@ -663,8 +701,8 @@ button:disabled {
 }
 
 .menu-item {
-    padding: 14px 18px;
-    border-radius: 18px;
+    padding: 12px;
+    border-radius: var(--rd-s);
     display: flex;
     align-items: center;
     gap: 12px;
@@ -674,7 +712,7 @@ button:disabled {
 
 .menu-divider {
     height: 1px;
-    background: rgba(0, 0, 0, 0.05);
+    background: var(--w);
     margin: 8px 0;
 }
 
@@ -709,31 +747,29 @@ button:disabled {
 }
 
 .header-icon-btn {
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.15);
-    border: none;
-    border-radius: 12px;
-    color: #fff;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    color: var(--pc);
     cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: all 0.2s ease-in-out
 }
 
 .search-bar-header input {
     width: 100%;
-    padding: 12px 20px;
-    border-radius: 18px;
-    border: none;
-    background: rgba(255, 255, 255, 0.2);
-    color: #fff;
+    padding: 12px;
+    border: 1px solid var(--pc);
+    border-radius: var(--rd-p);
+    color: var(--w);
     outline: none;
     font-family: var(--f);
     font-weight: 600;
 }
 .search-bar-header input::placeholder {
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--w);
 }
 
 .message.highlight {
@@ -787,7 +823,7 @@ button:disabled {
 .color-dot {
     width: 14px;
     height: 14px;
-    border-radius: 4px;
+    border-radius: var(--rd-s);
 }
 
 .menu-item:active {
@@ -807,8 +843,8 @@ button:disabled {
 }
 
 .menu-trigger-btn:active {
-    background: var(--pl);
-    transform: scale(1.07);
+    background: var(--ph);
+    border-radius: var(--rd-s);
 }
 
 .floating-menu .menu-item:active {
@@ -816,19 +852,18 @@ button:disabled {
 }
 
 .header-icon-btn:active {
-    transform: scale(0.9);
-    background: rgba(255, 255, 255, 0.3);
+    border-radius: var(--rd-s);
 }
 
 .btn-send-icon:active:not(:disabled) {
-    transform: scale(1.07) rotate(5deg);
+    border-radius: var(--rd-s);
     background: var(--ph);
 }
 
 .reply-preview-in-msg {
     background: rgba(0, 0, 0, 0.05);
     padding: 8px;
-    border-radius: 12px;
+    border-radius: var(--rd-s);
     border-left: 3px solid var(--pc);
     margin-bottom: 8px;
     max-width: 100%;
@@ -847,10 +882,11 @@ button:disabled {
 /* Context Menu Box styling */
 .msg-menu-box {
     position: absolute;
-    background: var(--w);
-    border-radius: 24px;
+    background: color-mix(in srgb, var(--pl) 70%, transparent);
+    border-radius: var(--rd-m);
+    backdrop-filter: blur(30px);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    padding: 10px;
+    padding: 8px;
     min-width: 200px;
     transform: translate(-50%, -100%);
     z-index: 2001;
@@ -875,8 +911,8 @@ button:disabled {
 
 .reaction-row {
     display: flex;
-    gap: 8px;
-    padding: 5px;
+    gap: 4px;
+    padding: 4px;
     justify-content: center;
 }
 .reaction-btn {
